@@ -29,35 +29,74 @@ if (location.href.search("confirmation") > 0) {
   if (cartStockage == null) {
     cartItems.innerHTML = `<h3 style="text-align: center; margin-bottom: 50px;">Votre panier est vide !</h3>`;
   } else {
+    const section = document.querySelector("#cart__items");
     for (k = 0; k < cartStockage.length; k++) {
-      componentsCart =
-        componentsCart +
-        `<article class="cart__item" data-id="${cartStockage[k].product}" data-color="${cartStockage[k].color}">
-    <div class="cart__item__img">
-                  <img src="${cartStockage[k].image}" alt="${cartStockage[k].alt}">
-                </div>
-                <div class="cart__item__content">
-                  <div class="cart__item__content__description">
-                    <h2>${cartStockage[k].name}</h2>
-                    <p>${cartStockage[k].color}</p>
-                    <p>${cartStockage[k].price} €</p>
-                  </div>
-                  <div class="cart__item__content__settings">
-                    <div class="cart__item__content__settings__quantity">
-                      <p>Qté :</p>
-                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${cartStockage[k].quantity}">
-                    </div>
-                    <div class="cart__item__content__settings__delete">
-                      <p class="deleteItem">Supprimer</p>
-                    </div>
-                  </div>
-                </div>
-              </article>`;
+      // creation des variable pour la creation des balises qui integreront le DOm en dynamique par la methode createlement
+      let newArticle = document.createElement("article");
+      let newDivImg = document.createElement("div");
+      let newImage = document.createElement("img");
+      let newDivContent = document.createElement("div");
+      let newDivDescription = document.createElement("div");
+      let pInformationColor = document.createElement("p");
+      let pInformationPrice = document.createElement("p");
+      let newBigTitle = document.createElement("h2");
+      let newDivSettings = document.createElement("div");
+      let newDivSettingsQuantity = document.createElement("div");
+      let pInformationQuantity = document.createElement("p");
+      let newInput = document.createElement("input");
+      let newDivSettingsDelete = document.createElement("div");
+      let pInformationDelete = document.createElement("p");
 
-      cartItems.innerHTML = componentsCart;
-    }
+      // Je recuperes les informations du localstorage afin de les integrer dans les elments de façon dynamique
+      newArticle.className = "cart__item";
+      newArticle.dataset.id = cartStockage[k].product;
+      newArticle.dataset.color = cartStockage[k].color;
+
+      newDivImg.className = "cart__item__img";
+      newImage.src = cartStockage[k].image;
+      newImage.alt = cartStockage[k].alt;
+
+      newDivContent.className = "cart__item__content";
+      newDivDescription.className = "cart__item__content__description";
+      newBigTitle.innerText = cartStockage[k].name;
+      pInformationColor.innerText = cartStockage[k].color;
+      pInformationPrice.innerText = cartStockage[k].price + " €";
+
+      newDivSettings.className = "cart__item__content__settings";
+      newDivSettingsQuantity.className =
+        "cart__item__content__settings__quantity";
+      pInformationQuantity.innerText = " Qté : ";
+      newInput.type = "number";
+      newInput.className = "itemQuantity";
+      newInput.name = "itemQuantity";
+      newInput.min = "1";
+      newInput.max = "100";
+      newInput.value = cartStockage[k].quantity;
+
+      newDivSettingsDelete.className = "cart__item__content__settings__delete";
+      pInformationDelete.className = "deleteItem";
+      pInformationDelete.innerText = "Supprimer";
+
+      // Avec la methode appenchild je vais lier les differents elements parents et enfant entre eux
+      newArticle.appendChild(newDivImg);
+      newDivImg.appendChild(newImage);
+      newArticle.appendChild(newDivContent);
+      newArticle.appendChild(newDivContent);
+      newDivContent.appendChild(newDivDescription);
+      newDivDescription.appendChild(newBigTitle);
+      newDivDescription.appendChild(pInformationColor);
+      newDivDescription.appendChild(pInformationPrice);
+      newArticle.appendChild(newDivSettings);
+      newDivSettings.appendChild(newDivSettingsQuantity);
+      newDivSettingsQuantity.appendChild(pInformationQuantity);
+      newDivSettingsQuantity.appendChild(newInput);
+      newDivSettings.appendChild(newDivSettingsDelete);
+      newDivSettingsDelete.appendChild(pInformationDelete);
+
+      section.appendChild(newArticle);
+    };
   }
-}
+};
 let itemCart = document.getElementsByClassName("cart__item");
 // console.log(itemCart);
 
@@ -79,7 +118,7 @@ for (let i = 0; i < itemCart.length; i++) {
     );
 
     console.log(cartStockage);
-    localStorage.removeItem("produit");
+    saveCart();
 
     window.location.href = "cart.html";
   });
@@ -148,7 +187,7 @@ const inputs = document.querySelectorAll(
 
 let firstName, lastName, address, city, email;
 
-// Fonction qui va gerer l'affichage des erreurs en selectionnant grace au tag directement le id de chaque div et y inserant un message si il est valid ou non 
+// Fonction qui va gerer l'affichage des erreurs en selectionnant grace au tag directement le id de chaque div et y inserant un message si il est valid ou non
 const errorDisplay = (tag, message, valid) => {
   const errorMsg = document.querySelector("#" + tag + "");
   if (!valid) {

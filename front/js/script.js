@@ -5,9 +5,9 @@ fetch("http://localhost:3000/api/products")
   .then((data) => {
     for (i = 0; i < data.length; i++) {
       let newHref = document.createElement("a");
-
-      let newArticle = document.createElement("article");
       let newImage = document.createElement("img");
+      
+      let newArticle = document.createElement("article");
       newHref.href = `./product.html?id=${data[i]._id}`;
       newImage.src = data[i].imageUrl;
       newImage.alt = data[i].altTxt;
